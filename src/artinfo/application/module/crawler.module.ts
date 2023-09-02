@@ -16,9 +16,12 @@ import { GongjuCrawlerService } from '@/artinfo/application/service/crawler/gong
 import { ChungnamPhilharmonicCrawlerService } from '@/artinfo/application/service/crawler/chungnam_philharmonic_crawler.service';
 import { GwacheonCrawlerService } from '@/artinfo/application/service/crawler/gwacheon_crawler.service';
 import { GwangmyeongCrawlerService } from '@/artinfo/application/service/crawler/gwangmyeong_crawler.service';
+import { JobRecruitsScheduler } from '@/artinfo/application/scheduler/job-recruits.scheduler';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   controllers: [CrawlerController, CrawlerEventHandler],
+  imports: [ScheduleModule.forRoot()],
   providers: [
     // Service
     CrawlerService,
@@ -33,6 +36,9 @@ import { GwangmyeongCrawlerService } from '@/artinfo/application/service/crawler
     GwacheonCrawlerService,
     GwangmyeongCrawlerService,
     LogService,
+
+    // Scheduler
+    JobRecruitsScheduler,
 
     // Repository
     SupabaseRepository,

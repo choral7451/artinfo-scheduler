@@ -26,16 +26,16 @@ export class CrawlerService {
   ) {}
 
   async crawlRecruitJobs(): Promise<boolean> {
-    const result = await Promise.any([
-      // await this.nationalChorusCrawlerService.crawlNationalChorus(), //
-      // await this.gangnamCrawlerService.crawlGangnam(),
-      // await this.gangneungCrawlerService.crawlGangneung(),
-      // await this.gyeonggiCrawlerService.crawlGyeonggi(),
-      // await this.gyeongsangbukCrawlerService.crawlGyeongsangbuk(),
-      // await this.goyangCivicChoirCrawlerService.crawlGoyangCivicChoir(),
-      // await this.gongjuCrawlerService.crawlGongju(),
-      // await this.chungnamPhilharmonicCrawlerService.crawlChungnamPhilharmonic(),
-      // await this.gwacheonCrawlerService.crawlGwacheon(),
+    await Promise.any([
+      await this.nationalChorusCrawlerService.crawlNationalChorus(), //
+      await this.gangnamCrawlerService.crawlGangnam(),
+      await this.gangneungCrawlerService.crawlGangneung(),
+      await this.gyeonggiCrawlerService.crawlGyeonggi(),
+      await this.gyeongsangbukCrawlerService.crawlGyeongsangbuk(),
+      await this.goyangCivicChoirCrawlerService.crawlGoyangCivicChoir(),
+      await this.gongjuCrawlerService.crawlGongju(),
+      await this.chungnamPhilharmonicCrawlerService.crawlChungnamPhilharmonic(),
+      await this.gwacheonCrawlerService.crawlGwacheon(),
       // TODO 추가 작업 필요
       // await this.gwangmyeongCrawlerService.crawlGwangmyeong(),
     ]);
