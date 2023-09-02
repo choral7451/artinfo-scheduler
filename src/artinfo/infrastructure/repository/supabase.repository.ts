@@ -7,7 +7,11 @@ export class SupabaseRepository {
 
   constructor() {
     if (process.env.SUPABASE_URL && process.env.SUPABASE_KEY) {
-      this.supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY);
+      this.supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY, {
+        auth: {
+          persistSession: false,
+        },
+      });
     }
   }
 }

@@ -3,7 +3,6 @@ import { Cron } from '@nestjs/schedule';
 import { CrawlerService } from '@/artinfo/application/service/crawler/crawler.service';
 import { LogPayload } from '@/artinfo/domain/entities/server_log.entity';
 import { LOG_LEVEL } from '@/artinfo/interface/type/type';
-import { UtilLog } from '@/artinfo/utils/log';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 
 @Injectable()
