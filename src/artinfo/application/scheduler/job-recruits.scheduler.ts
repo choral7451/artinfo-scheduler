@@ -12,6 +12,7 @@ export class JobRecruitsScheduler {
     private readonly eventEmitter: EventEmitter2,
   ) {}
 
+  // cicd test
   @Cron('0 0 23 * * *')
   async crawlJobRecruits(): Promise<void> {
     const startTime = new Date();
