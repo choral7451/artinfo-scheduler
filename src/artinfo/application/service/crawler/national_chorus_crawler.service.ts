@@ -4,7 +4,6 @@ import * as cheerio from 'cheerio';
 import { RecruitJob, RecruitJobPayload } from '@/artinfo/domain/entities/recruit_job.entity';
 import { LOG_LEVEL, RECRUIT_JOBS_CATEGORY } from '@/artinfo/interface/type/type';
 import { RecruitJobRepository } from '@/artinfo/infrastructure/repository/recruit_job.repository';
-import { UtilDate } from '@/artinfo/utils/date';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { UtilLog } from '@/artinfo/utils/log';
 import { LogPayload } from '@/artinfo/domain/entities/server_log.entity';

@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import axios from 'axios';
 import * as cheerio from 'cheerio';
-import { RecruitJob, RecruitJobPayload } from '@/artinfo/domain/entities/recruit_job.entity';
+import { RecruitJobPayload } from '@/artinfo/domain/entities/recruit_job.entity';
 import { LOG_LEVEL, RECRUIT_JOBS_CATEGORY } from '@/artinfo/interface/type/type';
 import { RecruitJobRepository } from '@/artinfo/infrastructure/repository/recruit_job.repository';
 import { EventEmitter2 } from '@nestjs/event-emitter';
@@ -33,7 +33,7 @@ export class GwangmyeongCrawlerService {
       for (let i = 1; i <= 7; i++) {
         const recruitCreatedAt = lists.find(`div:nth-child(${i})`).text();
         const createdMonthAndDate = Number(String(Number(recruitCreatedAt[1])) + String(Number(recruitCreatedAt[2])));
-        console.log(recruitCreatedAt);
+
         const url = 'https://www.gcart.or.kr/' + lists.find(`li:nth-child(${i})`).find('p:nth-child(2)').find('a').attr('href')?.slice(1);
 
         if (today === createdMonthAndDate && url) {

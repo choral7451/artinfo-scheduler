@@ -9,6 +9,7 @@ import { GongjuCrawlerService } from '@/artinfo/application/service/crawler/gong
 import { ChungnamPhilharmonicCrawlerService } from '@/artinfo/application/service/crawler/chungnam_philharmonic_crawler.service';
 import { GwacheonCrawlerService } from '@/artinfo/application/service/crawler/gwacheon_crawler.service';
 import { GwangmyeongCrawlerService } from '@/artinfo/application/service/crawler/gwangmyeong_crawler.service';
+import { JangshinCrawlerService } from '@/artinfo/application/service/crawler/jangshin_crawler.service';
 
 @Injectable()
 export class CrawlerService {
@@ -23,10 +24,12 @@ export class CrawlerService {
     private readonly chungnamPhilharmonicCrawlerService: ChungnamPhilharmonicCrawlerService,
     private readonly gwacheonCrawlerService: GwacheonCrawlerService,
     private readonly gwangmyeongCrawlerService: GwangmyeongCrawlerService,
+    private readonly chongshinCrawlerService: JangshinCrawlerService,
   ) {}
 
   async crawlRecruitJobs(): Promise<boolean> {
     await Promise.any([
+      // ART_ORGANIZATION
       await this.nationalChorusCrawlerService.crawlNationalChorus(), //
       await this.gangnamCrawlerService.crawlGangnam(),
       await this.gangneungCrawlerService.crawlGangneung(),
@@ -36,6 +39,9 @@ export class CrawlerService {
       await this.gongjuCrawlerService.crawlGongju(),
       await this.chungnamPhilharmonicCrawlerService.crawlChungnamPhilharmonic(),
       await this.gwacheonCrawlerService.crawlGwacheon(),
+
+      // RELIGION
+      await this.chongshinCrawlerService.crawlJangshin(),
       // TODO 추가 작업 필요
       // await this.gwangmyeongCrawlerService.crawlGwangmyeong(),
     ]);
