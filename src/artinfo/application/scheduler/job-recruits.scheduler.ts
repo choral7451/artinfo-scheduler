@@ -12,7 +12,7 @@ export class JobRecruitsScheduler {
     private readonly eventEmitter: EventEmitter2,
   ) {}
 
-  @Cron('0 23 23 * * *')
+  @Cron('0 0 23 * * *')
   async crawlJobRecruits(): Promise<void> {
     const startTime = new Date();
     const logPayload: LogPayload = {
