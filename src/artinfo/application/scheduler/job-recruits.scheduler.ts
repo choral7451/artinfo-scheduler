@@ -12,12 +12,11 @@ export class JobRecruitsScheduler {
     private readonly eventEmitter: EventEmitter2,
   ) {}
 
-  // cicd test test
-  @Cron('0 0 23 * * *')
+  @Cron('0 8 23 * * *')
   async crawlJobRecruits(): Promise<void> {
     const startTime = new Date();
     const logPayload: LogPayload = {
-      level: LOG_LEVEL.ERROR,
+      level: LOG_LEVEL.LOG,
       className: 'JobRecruitsScheduler',
       functionName: 'crawlJobRecruits',
       message: `크롤링 실행 : ${startTime}`,
