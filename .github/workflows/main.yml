@@ -23,6 +23,8 @@ jobs:
             source /home/ubuntu/.nvm/nvm.sh
             cd artinfo-server
             git pull
+            sudo npm install -g n
+            sudo n latest
             sudo npm install -g npm
             hash -d npm
             yarn install 
