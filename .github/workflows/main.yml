@@ -23,6 +23,7 @@ jobs:
             source /home/ubuntu/.nvm/nvm.sh
             cd artinfo-server
             git pull
+            npm install -g npm@latest
             yarn install 
             yarn run build
             pm2 restart
