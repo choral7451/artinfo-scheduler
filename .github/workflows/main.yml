@@ -18,4 +18,11 @@ jobs:
           username: ${{ secrets.USERNAME }}
           password: ${{ secrets.PASSWORD }}
           port: ${{ secrets.PORT }}
-          script: ${{ secrets.SCRIPT }}
+          script: |
+            export NVM_DIR=/home/ubuntu/.nvm
+            source /home/ubuntu/.nvm/nvm.sh
+            cd artinfo-server
+            git pull
+            yarn install 
+            yarn run build
+            pm2 restart
