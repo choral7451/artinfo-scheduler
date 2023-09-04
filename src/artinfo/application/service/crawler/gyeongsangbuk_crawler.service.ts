@@ -59,7 +59,7 @@ export class GyeongsangbukCrawlerService {
               companyName: '경북도립예술단',
               companyImageUrl: 'https://ycuajmirzlqpgzuonzca.supabase.co/storage/v1/object/public/artinfo/system/gyeongsangbuk_logo.png',
               linkUrl: url,
-              isActive: false,
+              isActive: true,
             };
 
             await this.recruitJobRepository.saveRecruitJob(RecruitJob.from(recruitJob));

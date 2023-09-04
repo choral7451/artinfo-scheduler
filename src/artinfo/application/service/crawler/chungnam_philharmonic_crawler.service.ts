@@ -36,8 +36,9 @@ export class ChungnamPhilharmonicCrawlerService {
 
         const idx = lists.find(`tr:nth-child(${i})`).find('td:nth-child(2)').find('a').attr('onclick')?.split("'")[1];
         const url = `https://www.gongju.go.kr/bbs/BBSMSTR_000000000730/view.do?nttId=${idx}`;
+        const title = lists.find(`tr:nth-child(${i})`).find('td:nth-child(2)').text().trim();
 
-        if (today === createdMonthAndDate && url) {
+        if (today === createdMonthAndDate && url && title.includes('모집')) {
           const detailHtml = await axios.get(url, {
             headers: {
               'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.100 Safari/537.36',
@@ -45,8 +46,6 @@ export class ChungnamPhilharmonicCrawlerService {
           });
 
           const detail$ = cheerio.load(detailHtml.data);
-
-          const title = detail$('div.program--contents').find('h2').text().trim();
           const contents = detail$('div.bbs--view--cont').html();
 
           if (process.env.ARTINFO_ADMIN_ID && contents) {
@@ -58,7 +57,7 @@ export class ChungnamPhilharmonicCrawlerService {
               companyName: '공주시충남교향악단',
               companyImageUrl: 'https://ycuajmirzlqpgzuonzca.supabase.co/storage/v1/object/public/artinfo/system/chungnam_philharmonic.png',
               linkUrl: url,
-              isActive: false,
+              isActive: true,
             };
 
             await this.recruitJobRepository.saveRecruitJob(RecruitJob.from(recruitJob));

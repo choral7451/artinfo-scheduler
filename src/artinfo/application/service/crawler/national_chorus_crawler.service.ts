@@ -59,7 +59,7 @@ export class NationalChorusCrawlerService {
                   companyName: '국립합창단',
                   companyImageUrl: 'https://ycuajmirzlqpgzuonzca.supabase.co/storage/v1/object/public/artinfo/company_images/national_chorus.jpeg',
                   linkUrl: url,
-                  isActive: false,
+                  isActive: true,
                 };
 
                 await this.recruitJobRepository.saveRecruitJob(RecruitJob.from(recruitJob));

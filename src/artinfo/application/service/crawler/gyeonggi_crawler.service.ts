@@ -32,11 +32,12 @@ export class GyeonggiCrawlerService {
 
       for (let i = 1; i <= 5; i++) {
         const recruitCreatedAt = lists.find(`tr:nth-child(${i})`).find(`td:nth-child(4)`).text();
+        const title = lists.find(`tr:nth-child(${i})`).find(`td:nth-child(2)`).text().trim();
         const createdMonthAndDate = Number(String(new Date(recruitCreatedAt).getMonth() + 1) + String(new Date(recruitCreatedAt).getDate()));
 
         const url = 'http://www.ggac.or.kr' + lists.find(`tr:nth-child(${i})`).find('td:nth-child(2)').find('a').attr('href');
 
-        if (today === createdMonthAndDate && url) {
+        if (today === createdMonthAndDate && url && title.includes('단원')) {
           const detailHtml = await axios.get(url, {
             headers: {
               'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.100 Safari/537.36',
@@ -44,8 +45,6 @@ export class GyeonggiCrawlerService {
           });
 
           const detail$ = cheerio.load(detailHtml.data);
-
-          const title = detail$('tbody').find(`tr:nth-child(1)`).find(`td:nth-child(1)`).text().trim();
           const contents = detail$('div.viewblock').html();
           if (process.env.ARTINFO_ADMIN_ID && contents) {
             const recruitJob: RecruitJobPayload = {
@@ -56,7 +55,7 @@ export class GyeonggiCrawlerService {
               companyName: '경기도예술단',
               companyImageUrl: 'https://ycuajmirzlqpgzuonzca.supabase.co/storage/v1/object/public/artinfo/system/gyeonggi.logo.png',
               linkUrl: url,
-              isActive: false,
+              isActive: true,
             };
 
             await this.recruitJobRepository.saveRecruitJob(RecruitJob.from(recruitJob));
