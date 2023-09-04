@@ -9,15 +9,15 @@ import { UtilLog } from '@/artinfo/utils/log';
 import { LogPayload } from '@/artinfo/domain/entities/server_log.entity';
 
 @Injectable()
-export class GwacheonCrawlerService {
+export class NationalSymphonyCrawlerService {
   constructor(
     private readonly recruitJobRepository: RecruitJobRepository,
     private readonly eventEmitter: EventEmitter2,
   ) {}
 
-  async crawlGwacheon(): Promise<void> {
+  async crawlNationalSymphony(): Promise<void> {
     try {
-      const recruitUrl = 'https://www.gcart.or.kr/Arts/newsList.do';
+      const recruitUrl = 'https://www.knso.or.kr/front/M0000034/article/list.do';
 
       const html = await axios.get(recruitUrl, {
         headers: {
@@ -28,14 +28,15 @@ export class GwacheonCrawlerService {
       const today = Number(String(new Date().getMonth() + 1) + String(new Date().getDate()));
 
       const $ = cheerio.load(html.data);
-      const lists = $('ul.notice_list');
+      const lists = $('tbody');
 
-      for (let i = 2; i <= 6; i++) {
-        const recruitCreatedAt = lists.find(`li:nth-child(${i})`).find('p:nth-child(4)').text().split('.');
-        const title = lists.find(`li:nth-child(${i})`).find('p:nth-child(2)').text().trim();
-        const createdMonthAndDate = Number(String(Number(recruitCreatedAt[1])) + String(Number(recruitCreatedAt[2])));
+      for (let i = 1; i <= 5; i++) {
+        const recruitCreatedAt = lists.find(`tr:nth-child(${i})`).find('td:nth-child(5)').text().trim();
+        const title = lists.find(`tr:nth-child(${i})`).find('td:nth-child(3)').text().trim();
+        const createdMonthAndDate = Number(String(new Date(recruitCreatedAt).getMonth() + 1) + String(new Date(recruitCreatedAt).getDate()));
 
-        const url = 'https://www.gcart.or.kr/' + lists.find(`li:nth-child(${i})`).find('p:nth-child(2)').find('a').attr('href')?.slice(1);
+        const idx = lists.find(`tr:nth-child(${i})`).find('td:nth-child(3)').find('a').attr('onclick')?.split("'")[1];
+        const url = `https://www.knso.or.kr/front/M0000034/article/view.do?pageIndex=1&cateId=&atcId=${idx}&searchType=title&searchKeyword=`;
 
         if (today === createdMonthAndDate && url && title.includes('채용')) {
           const detailHtml = await axios.get(url, {
@@ -45,16 +46,20 @@ export class GwacheonCrawlerService {
           });
 
           const detail$ = cheerio.load(detailHtml.data);
-          const contents = detail$('div.view_cont').html();
+          const contents = detail$('div.viewContent').html();
 
           if (process.env.ARTINFO_ADMIN_ID && contents) {
+            const modifiedContents = contents.replace(/<img\s+src="([^"]+)"/g, (match, src) => {
+              return `<img src="https://www.knso.or.kr${src}"`;
+            });
+
             const recruitJob: RecruitJobPayload = {
               profileId: process.env.ARTINFO_ADMIN_ID,
               category: RECRUIT_JOBS_CATEGORY.ART_ORGANIZATION,
               title: title,
-              contents: contents,
-              companyName: '과천시립예술단',
-              companyImageUrl: 'https://ycuajmirzlqpgzuonzca.supabase.co/storage/v1/object/public/artinfo/system/gwacheon.png',
+              contents: modifiedContents,
+              companyName: '국립심포니오케스트라',
+              companyImageUrl: 'https://ycuajmirzlqpgzuonzca.supabase.co/storage/v1/object/public/artinfo/system/national_symphony_logo.png',
               linkUrl: url,
               isActive: true,
             };

@@ -61,7 +61,7 @@ export class GoyangCivicChoirCrawlerService {
               companyName: '고양시립합창단',
               companyImageUrl: 'https://ycuajmirzlqpgzuonzca.supabase.co/storage/v1/object/public/artinfo/system/goyang_civic_choir.png',
               linkUrl: url,
-              isActive: false,
+              isActive: true,
             };
 
             await this.recruitJobRepository.saveRecruitJob(RecruitJob.from(recruitJob));

@@ -34,11 +34,12 @@ export class GongjuCrawlerService {
 
       for (let i = 1; i <= 5; i++) {
         const recruitCreatedAt = lists.find(`tr:nth-child(${i})`).find(`td:nth-child(5)`).text().trim();
+        const title = lists.find(`tr:nth-child(${i})`).find(`td:nth-child(3)`).text().trim();
         const createdMonthAndDate = Number(String(new Date(recruitCreatedAt).getMonth() + 1) + String(new Date(recruitCreatedAt).getDate()));
         const idx = lists.find(`tr:nth-child(${i})`).find('td:nth-child(3)').find('a').attr('onclick')?.split("'")[1];
         const url = `https://www.gongju.go.kr/prog/saeolGosi/GOSI_05/sub04_03_05/view.do?notAncmtMgtNo=${idx}`;
 
-        if (today === createdMonthAndDate && url) {
+        if (today === createdMonthAndDate && url && title.includes('합창')) {
           const detailHtml = await axios.get(url, {
             headers: {
               'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.100 Safari/537.36',
@@ -46,8 +47,6 @@ export class GongjuCrawlerService {
           });
 
           const detail$ = cheerio.load(detailHtml.data);
-
-          const title = detail$('div.program--contents').find('h2').text().trim();
           const contents = detail$('div.bbs--view--cont').html();
 
           if (process.env.ARTINFO_ADMIN_ID && contents) {
@@ -59,7 +58,7 @@ export class GongjuCrawlerService {
               companyName: '공주시립합창단',
               companyImageUrl: 'https://ycuajmirzlqpgzuonzca.supabase.co/storage/v1/object/public/artinfo/system/gongju_civic_choir.png',
               linkUrl: url,
-              isActive: false,
+              isActive: true,
             };
 
             await this.recruitJobRepository.saveRecruitJob(RecruitJob.from(recruitJob));

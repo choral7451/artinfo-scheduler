@@ -42,7 +42,7 @@ export class GangneungCrawlerService {
 
         const url = 'https://www.gn.go.kr' + lists.find(`tr:nth-child(${i})`).find('td:nth-child(3)').find('form').attr('action');
 
-        if (1227 === createdMonthAndDate && url && title && title.includes('공개모집')) {
+        if (today === createdMonthAndDate && url && title && title.includes('공개모집')) {
           const detailHtml = await axios.get(url, {
             headers: {
               'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.100 Safari/537.36',

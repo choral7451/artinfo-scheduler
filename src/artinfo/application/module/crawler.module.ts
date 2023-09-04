@@ -19,6 +19,9 @@ import { GwangmyeongCrawlerService } from '@/artinfo/application/service/crawler
 import { JobRecruitsScheduler } from '@/artinfo/application/scheduler/job-recruits.scheduler';
 import { ScheduleModule } from '@nestjs/schedule';
 import { JangshinCrawlerService } from '@/artinfo/application/service/crawler/jangshin_crawler.service';
+import { ChongshinCrawlerService } from '@/artinfo/application/service/crawler/chongshin_crawler.service';
+import { NationalSymphonyCrawlerService } from '@/artinfo/application/service/crawler/national_symphony_crawler.service';
+import { NationalOperaCrawlerService } from '@/artinfo/application/service/crawler/national_opera_crawler.service';
 
 @Module({
   controllers: [CrawlerController, CrawlerEventHandler],
@@ -37,6 +40,9 @@ import { JangshinCrawlerService } from '@/artinfo/application/service/crawler/ja
     GwacheonCrawlerService,
     GwangmyeongCrawlerService,
     JangshinCrawlerService,
+    ChongshinCrawlerService,
+    NationalSymphonyCrawlerService,
+    NationalOperaCrawlerService,
     LogService,
 
     // Scheduler

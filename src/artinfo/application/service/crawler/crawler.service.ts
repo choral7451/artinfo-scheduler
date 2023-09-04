@@ -10,6 +10,9 @@ import { ChungnamPhilharmonicCrawlerService } from '@/artinfo/application/servic
 import { GwacheonCrawlerService } from '@/artinfo/application/service/crawler/gwacheon_crawler.service';
 import { GwangmyeongCrawlerService } from '@/artinfo/application/service/crawler/gwangmyeong_crawler.service';
 import { JangshinCrawlerService } from '@/artinfo/application/service/crawler/jangshin_crawler.service';
+import { ChongshinCrawlerService } from '@/artinfo/application/service/crawler/chongshin_crawler.service';
+import { NationalSymphonyCrawlerService } from '@/artinfo/application/service/crawler/national_symphony_crawler.service';
+import { NationalOperaCrawlerService } from '@/artinfo/application/service/crawler/national_opera_crawler.service';
 
 @Injectable()
 export class CrawlerService {
@@ -24,7 +27,10 @@ export class CrawlerService {
     private readonly chungnamPhilharmonicCrawlerService: ChungnamPhilharmonicCrawlerService,
     private readonly gwacheonCrawlerService: GwacheonCrawlerService,
     private readonly gwangmyeongCrawlerService: GwangmyeongCrawlerService,
-    private readonly chongshinCrawlerService: JangshinCrawlerService,
+    private readonly jangshinCrawlerService: JangshinCrawlerService,
+    private readonly chongshinCrawlerService: ChongshinCrawlerService,
+    private readonly nationalSymphonyCrawlerService: NationalSymphonyCrawlerService,
+    private readonly nationalOperaCrawlerService: NationalOperaCrawlerService,
   ) {}
 
   async crawlRecruitJobs(): Promise<boolean> {
@@ -39,11 +45,14 @@ export class CrawlerService {
       await this.gongjuCrawlerService.crawlGongju(),
       await this.chungnamPhilharmonicCrawlerService.crawlChungnamPhilharmonic(),
       await this.gwacheonCrawlerService.crawlGwacheon(),
+      await this.nationalSymphonyCrawlerService.crawlNationalSymphony(),
+      await this.nationalOperaCrawlerService.crawlNationalOpera(),
 
       // RELIGION
-      await this.chongshinCrawlerService.crawlJangshin(),
+      await this.jangshinCrawlerService.crawlJangshin(),
       // TODO 추가 작업 필요
       // await this.gwangmyeongCrawlerService.crawlGwangmyeong(),
+      // await this.chongshinCrawlerService.crawlChongshin(),
     ]);
     return true;
   }
