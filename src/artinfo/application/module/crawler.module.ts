@@ -23,6 +23,8 @@ import { ChongshinCrawlerService } from '@/artinfo/application/service/crawler/r
 import { NationalSymphonyCrawlerService } from '@/artinfo/application/service/crawler/recruit/national_symphony_crawler.service';
 import { NationalOperaCrawlerService } from '@/artinfo/application/service/crawler/recruit/national_opera_crawler.service';
 import { ArtCenterCrawlerService } from '@/artinfo/application/service/crawler/concert/art_center_crawler.service';
+import { ConcertRepository } from '@/artinfo/infrastructure/repository/concert.repository';
+import { ConcertsScheduler } from '@/artinfo/application/scheduler/concerts.scheduler';
 
 @Module({
   controllers: [CrawlerController, CrawlerEventHandler],
@@ -49,10 +51,12 @@ import { ArtCenterCrawlerService } from '@/artinfo/application/service/crawler/c
 
     // Scheduler
     JobRecruitsScheduler,
+    ConcertsScheduler,
 
     // Repository
     SupabaseRepository,
     RecruitJobRepository,
+    ConcertRepository,
     LogRepository,
   ],
 })

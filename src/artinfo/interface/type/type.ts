@@ -6,6 +6,15 @@ export const RECRUIT_JOBS_CATEGORY = {
 } as const;
 export type RECRUIT_JOBS_CATEGORY = (typeof RECRUIT_JOBS_CATEGORY)[keyof typeof RECRUIT_JOBS_CATEGORY];
 
+export const CONCERT_CATEGORY = {
+  ORCHESTRA: 'ORCHESTRA',
+  CHORUS: 'CHORUS',
+  ETC: 'ETC',
+  ENSEMBLE: 'ENSEMBLE',
+  SOLO: 'SOLO',
+} as const;
+export type CONCERT_CATEGORY = (typeof CONCERT_CATEGORY)[keyof typeof CONCERT_CATEGORY];
+
 export const LOG_LEVEL = {
   LOG: 'LOG',
   WARN: 'WARN',

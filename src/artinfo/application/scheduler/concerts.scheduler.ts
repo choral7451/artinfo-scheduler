@@ -6,27 +6,27 @@ import { LOG_LEVEL } from '@/artinfo/interface/type/type';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 
 @Injectable()
-export class JobRecruitsScheduler {
+export class ConcertsScheduler {
   constructor(
     private readonly crawlerService: CrawlerService,
     private readonly eventEmitter: EventEmitter2,
   ) {}
 
-  @Cron('0 0 23 * * *')
-  async crawlJobRecruits(): Promise<void> {
+  @Cron('0 1 1 * * *')
+  async crawlConcerts(): Promise<void> {
     const startTime = new Date();
     const logPayload: LogPayload = {
       level: LOG_LEVEL.LOG,
       className: 'JobRecruitsScheduler',
       functionName: 'crawlJobRecruits',
-      message: `JobRecruitsScheduler 실행 : ${startTime}`,
+      message: `ConcertsScheduler 실행 : ${startTime}`,
     };
     this.eventEmitter.emit('log.created', logPayload);
 
-    await this.crawlerService.crawlRecruitJobs();
+    await this.crawlerService.crawlConcerts();
 
     const endTime = new Date();
-    logPayload.message = `JobRecruitsScheduler 종료 : ${endTime} - 소요 시간 : ${this.elapsedTime(endTime.getTime() - startTime.getTime())}`;
+    logPayload.message = `ConcertsScheduler 종료 : ${endTime} - 소요 시간 : ${this.elapsedTime(endTime.getTime() - startTime.getTime())}`;
     this.eventEmitter.emit('log.created', logPayload);
   }
 
