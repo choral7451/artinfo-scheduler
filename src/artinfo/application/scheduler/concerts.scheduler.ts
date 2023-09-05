@@ -12,7 +12,7 @@ export class ConcertsScheduler {
     private readonly eventEmitter: EventEmitter2,
   ) {}
 
-  @Cron('0 1 1 * * *')
+  @Cron('0 4 1 * * *')
   async crawlConcerts(): Promise<void> {
     const startTime = new Date();
     const logPayload: LogPayload = {
