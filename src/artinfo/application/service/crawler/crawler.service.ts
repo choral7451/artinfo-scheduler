@@ -1,18 +1,19 @@
 import { Injectable } from '@nestjs/common';
-import { NationalChorusCrawlerService } from '@/artinfo/application/service/crawler/national_chorus_crawler.service';
-import { GangnamCrawlerService } from '@/artinfo/application/service/crawler/gangnam_crawler.service';
-import { GangneungCrawlerService } from '@/artinfo/application/service/crawler/gangneung_crawler.service';
-import { GyeonggiCrawlerService } from '@/artinfo/application/service/crawler/gyeonggi_crawler.service';
-import { GyeongsangbukCrawlerService } from '@/artinfo/application/service/crawler/gyeongsangbuk_crawler.service';
-import { GoyangCivicChoirCrawlerService } from '@/artinfo/application/service/crawler/goyang_civic_choir_crawler.service';
-import { GongjuCrawlerService } from '@/artinfo/application/service/crawler/gongju_crawler.service';
-import { ChungnamPhilharmonicCrawlerService } from '@/artinfo/application/service/crawler/chungnam_philharmonic_crawler.service';
-import { GwacheonCrawlerService } from '@/artinfo/application/service/crawler/gwacheon_crawler.service';
-import { GwangmyeongCrawlerService } from '@/artinfo/application/service/crawler/gwangmyeong_crawler.service';
-import { JangshinCrawlerService } from '@/artinfo/application/service/crawler/jangshin_crawler.service';
-import { ChongshinCrawlerService } from '@/artinfo/application/service/crawler/chongshin_crawler.service';
-import { NationalSymphonyCrawlerService } from '@/artinfo/application/service/crawler/national_symphony_crawler.service';
-import { NationalOperaCrawlerService } from '@/artinfo/application/service/crawler/national_opera_crawler.service';
+import { NationalChorusCrawlerService } from '@/artinfo/application/service/crawler/recruit/national_chorus_crawler.service';
+import { GangnamCrawlerService } from '@/artinfo/application/service/crawler/recruit/gangnam_crawler.service';
+import { GangneungCrawlerService } from '@/artinfo/application/service/crawler/recruit/gangneung_crawler.service';
+import { GyeonggiCrawlerService } from '@/artinfo/application/service/crawler/recruit/gyeonggi_crawler.service';
+import { GyeongsangbukCrawlerService } from '@/artinfo/application/service/crawler/recruit/gyeongsangbuk_crawler.service';
+import { GoyangCivicChoirCrawlerService } from '@/artinfo/application/service/crawler/recruit/goyang_civic_choir_crawler.service';
+import { GongjuCrawlerService } from '@/artinfo/application/service/crawler/recruit/gongju_crawler.service';
+import { ChungnamPhilharmonicCrawlerService } from '@/artinfo/application/service/crawler/recruit/chungnam_philharmonic_crawler.service';
+import { GwacheonCrawlerService } from '@/artinfo/application/service/crawler/recruit/gwacheon_crawler.service';
+import { GwangmyeongCrawlerService } from '@/artinfo/application/service/crawler/recruit/gwangmyeong_crawler.service';
+import { JangshinCrawlerService } from '@/artinfo/application/service/crawler/recruit/jangshin_crawler.service';
+import { ChongshinCrawlerService } from '@/artinfo/application/service/crawler/recruit/chongshin_crawler.service';
+import { NationalSymphonyCrawlerService } from '@/artinfo/application/service/crawler/recruit/national_symphony_crawler.service';
+import { NationalOperaCrawlerService } from '@/artinfo/application/service/crawler/recruit/national_opera_crawler.service';
+import { ArtCenterCrawlerService } from '@/artinfo/application/service/crawler/concert/art_center_crawler.service';
 
 @Injectable()
 export class CrawlerService {
@@ -31,6 +32,7 @@ export class CrawlerService {
     private readonly chongshinCrawlerService: ChongshinCrawlerService,
     private readonly nationalSymphonyCrawlerService: NationalSymphonyCrawlerService,
     private readonly nationalOperaCrawlerService: NationalOperaCrawlerService,
+    private readonly artCenterCrawlerService: ArtCenterCrawlerService,
   ) {}
 
   async crawlRecruitJobs(): Promise<boolean> {
@@ -53,6 +55,14 @@ export class CrawlerService {
       // TODO 추가 작업 필요
       // await this.gwangmyeongCrawlerService.crawlGwangmyeong(),
       // await this.chongshinCrawlerService.crawlChongshin(),
+    ]);
+    return true;
+  }
+
+  async crawlConcerts(): Promise<boolean> {
+    await Promise.any([
+      // ART_ORGANIZATION
+      await this.artCenterCrawlerService.crawlArtCenter(), //
     ]);
     return true;
   }

@@ -5,8 +5,13 @@ import { CrawlerService } from '@/artinfo/application/service/crawler/crawler.se
 export class CrawlerController {
   constructor(private readonly crawlerService: CrawlerService) {}
 
-  @Get()
-  async getHello() {
+  @Get('/jobs')
+  async crawlRecruitJobs() {
     return this.crawlerService.crawlRecruitJobs();
+  }
+
+  @Get('/concerts')
+  async crawlConcerts() {
+    return this.crawlerService.crawlConcerts();
   }
 }

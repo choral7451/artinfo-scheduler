@@ -2,26 +2,27 @@ import { Module } from '@nestjs/common';
 import { CrawlerController } from '../../interface/controller/crawler.controller';
 import { SupabaseRepository } from '../../infrastructure/repository/supabase.repository';
 import { CrawlerService } from '@/artinfo/application/service/crawler/crawler.service';
-import { NationalChorusCrawlerService } from '@/artinfo/application/service/crawler/national_chorus_crawler.service';
+import { NationalChorusCrawlerService } from '@/artinfo/application/service/crawler/recruit/national_chorus_crawler.service';
 import { RecruitJobRepository } from '@/artinfo/infrastructure/repository/recruit_job.repository';
 import { CrawlerEventHandler } from '@/artinfo/interface/event-handler/crawler-event-handler';
 import { LogRepository } from '@/artinfo/infrastructure/repository/log.repository';
-import { GangnamCrawlerService } from '@/artinfo/application/service/crawler/gangnam_crawler.service';
-import { GangneungCrawlerService } from '@/artinfo/application/service/crawler/gangneung_crawler.service';
+import { GangnamCrawlerService } from '@/artinfo/application/service/crawler/recruit/gangnam_crawler.service';
+import { GangneungCrawlerService } from '@/artinfo/application/service/crawler/recruit/gangneung_crawler.service';
 import { LogService } from '@/artinfo/application/service/log.service';
-import { GyeonggiCrawlerService } from '@/artinfo/application/service/crawler/gyeonggi_crawler.service';
-import { GyeongsangbukCrawlerService } from '@/artinfo/application/service/crawler/gyeongsangbuk_crawler.service';
-import { GoyangCivicChoirCrawlerService } from '@/artinfo/application/service/crawler/goyang_civic_choir_crawler.service';
-import { GongjuCrawlerService } from '@/artinfo/application/service/crawler/gongju_crawler.service';
-import { ChungnamPhilharmonicCrawlerService } from '@/artinfo/application/service/crawler/chungnam_philharmonic_crawler.service';
-import { GwacheonCrawlerService } from '@/artinfo/application/service/crawler/gwacheon_crawler.service';
-import { GwangmyeongCrawlerService } from '@/artinfo/application/service/crawler/gwangmyeong_crawler.service';
+import { GyeonggiCrawlerService } from '@/artinfo/application/service/crawler/recruit/gyeonggi_crawler.service';
+import { GyeongsangbukCrawlerService } from '@/artinfo/application/service/crawler/recruit/gyeongsangbuk_crawler.service';
+import { GoyangCivicChoirCrawlerService } from '@/artinfo/application/service/crawler/recruit/goyang_civic_choir_crawler.service';
+import { GongjuCrawlerService } from '@/artinfo/application/service/crawler/recruit/gongju_crawler.service';
+import { ChungnamPhilharmonicCrawlerService } from '@/artinfo/application/service/crawler/recruit/chungnam_philharmonic_crawler.service';
+import { GwacheonCrawlerService } from '@/artinfo/application/service/crawler/recruit/gwacheon_crawler.service';
+import { GwangmyeongCrawlerService } from '@/artinfo/application/service/crawler/recruit/gwangmyeong_crawler.service';
 import { JobRecruitsScheduler } from '@/artinfo/application/scheduler/job-recruits.scheduler';
 import { ScheduleModule } from '@nestjs/schedule';
-import { JangshinCrawlerService } from '@/artinfo/application/service/crawler/jangshin_crawler.service';
-import { ChongshinCrawlerService } from '@/artinfo/application/service/crawler/chongshin_crawler.service';
-import { NationalSymphonyCrawlerService } from '@/artinfo/application/service/crawler/national_symphony_crawler.service';
-import { NationalOperaCrawlerService } from '@/artinfo/application/service/crawler/national_opera_crawler.service';
+import { JangshinCrawlerService } from '@/artinfo/application/service/crawler/recruit/jangshin_crawler.service';
+import { ChongshinCrawlerService } from '@/artinfo/application/service/crawler/recruit/chongshin_crawler.service';
+import { NationalSymphonyCrawlerService } from '@/artinfo/application/service/crawler/recruit/national_symphony_crawler.service';
+import { NationalOperaCrawlerService } from '@/artinfo/application/service/crawler/recruit/national_opera_crawler.service';
+import { ArtCenterCrawlerService } from '@/artinfo/application/service/crawler/concert/art_center_crawler.service';
 
 @Module({
   controllers: [CrawlerController, CrawlerEventHandler],
@@ -43,6 +44,7 @@ import { NationalOperaCrawlerService } from '@/artinfo/application/service/crawl
     ChongshinCrawlerService,
     NationalSymphonyCrawlerService,
     NationalOperaCrawlerService,
+    ArtCenterCrawlerService,
     LogService,
 
     // Scheduler

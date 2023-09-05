@@ -75,8 +75,8 @@ export class JangshinCrawlerService {
     } catch (e) {
       const logPayload: LogPayload = {
         level: LOG_LEVEL.ERROR,
-        className: 'ChungnamPhilharmonicCrawlerService',
-        functionName: 'crawlChungnamPhilharmonic',
+        className: 'JangshinCrawlerService',
+        functionName: 'crawlJangshin',
         message: e.message,
       };
 

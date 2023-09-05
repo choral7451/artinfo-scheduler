@@ -71,8 +71,8 @@ export class NationalSymphonyCrawlerService {
     } catch (e) {
       const logPayload: LogPayload = {
         level: LOG_LEVEL.ERROR,
-        className: 'GwacheonCrawlerService',
-        functionName: 'crawlGwacheon',
+        className: 'NationalSymphonyCrawlerService',
+        functionName: 'crawlNationalSymphony',
         message: e.message,
       };
 

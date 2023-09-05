@@ -30,6 +30,7 @@
     "axios": "^1.4.0",
     "cheerio": "^1.0.0-rc.12",
     "iconv-lite": "^0.6.3",
+    "puppeteer": "^21.1.1",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.1"
   },
