@@ -88,7 +88,7 @@ export class ArtCenterCrawlerService {
             title: title,
             contents: contents!,
             posterUrl: posterUrl,
-            location: location,
+            location: '예술의전당 ' + location,
             performanceTime: performanceTime!,
             profileId: process.env.ARTINFO_ADMIN_ID!,
             category: this.classifyCategory(title),
