@@ -25,6 +25,7 @@ import { NationalOperaCrawlerService } from '@/artinfo/application/service/crawl
 import { ArtCenterCrawlerService } from '@/artinfo/application/service/crawler/concert/art_center_crawler.service';
 import { ConcertRepository } from '@/artinfo/infrastructure/repository/concert.repository';
 import { ConcertsScheduler } from '@/artinfo/application/scheduler/concerts.scheduler';
+import { SystemRepository } from '@/artinfo/infrastructure/repository/system.repository';
 
 @Module({
   controllers: [CrawlerController, CrawlerEventHandler],
@@ -57,6 +58,7 @@ import { ConcertsScheduler } from '@/artinfo/application/scheduler/concerts.sche
     SupabaseRepository,
     RecruitJobRepository,
     ConcertRepository,
+    SystemRepository,
     LogRepository,
   ],
 })

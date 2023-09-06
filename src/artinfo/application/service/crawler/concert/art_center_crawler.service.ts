@@ -5,14 +5,18 @@ import * as cheerio from 'cheerio';
 import { ConcertRepository } from '@/artinfo/infrastructure/repository/concert.repository';
 import { Concert, ConcertPayload } from '@/artinfo/domain/entities/concerts.entity';
 import { CONCERT_CATEGORY, LOG_LEVEL } from '@/artinfo/interface/type/type';
-import { LogPayload } from '@/artinfo/domain/entities/server_log.entity';
-import { UtilLog } from '@/artinfo/utils/log';
 import { EventEmitter2 } from '@nestjs/event-emitter';
+import { SystemRepository } from '@/artinfo/infrastructure/repository/system.repository';
+import * as fs from 'fs';
+import { File } from '@web-std/file';
+import { UtilLog } from '@/artinfo/utils/log';
+import { LogPayload } from '@/artinfo/domain/entities/server_log.entity';
 
 @Injectable()
 export class ArtCenterCrawlerService {
   constructor(
     private readonly concertRepository: ConcertRepository,
+    private readonly systemRepository: SystemRepository,
     private readonly eventEmitter: EventEmitter2,
   ) {}
 
@@ -47,10 +51,18 @@ export class ArtCenterCrawlerService {
             return a!.textContent!.trim();
           }, tr);
 
-          const posterUrl = await page.evaluate(tr => {
+          let posterUrl = await page.evaluate(tr => {
             const a = tr.querySelector('td:nth-child(1) a i img');
             return 'https://www.sac.or.kr' + a?.getAttribute('src');
           }, tr);
+
+          let filename = String(Date.now());
+          filename = await this.urlToFile(posterUrl, filename);
+          const buffer = fs.readFileSync('temp_images/' + filename);
+          const file = new File([buffer], filename, { type: 'image/webp' });
+
+          posterUrl = await this.systemRepository.uploadImage('concert/' + filename, file);
+          fs.unlinkSync('temp_images/' + filename);
 
           let performanceTime: any = await page.evaluate(tr => {
             const td = tr.querySelector('td:nth-child(2)');
@@ -110,6 +122,27 @@ export class ArtCenterCrawlerService {
       this.eventEmitter.emit('log.created', logPayload);
       console.log(UtilLog.getLogMessage(logPayload));
     }
+  }
+
+  private async urlToFile(url: string, filename: string): Promise<string> {
+    filename = filename + '.webp';
+    const response = await axios.get(url, { responseType: 'stream' });
+
+    const writeStream = fs.createWriteStream('temp_images/' + filename);
+
+    response.data.pipe(writeStream);
+
+    await new Promise<void>((resolve, reject) => {
+      writeStream.on('finish', () => {
+        resolve();
+      });
+
+      writeStream.on('error', error => {
+        reject(error);
+      });
+    });
+
+    return filename;
   }
 
   private classifyCategory(title: string) {
