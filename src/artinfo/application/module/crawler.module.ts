@@ -26,6 +26,7 @@ import { ArtCenterCrawlerService } from '@/artinfo/application/service/crawler/c
 import { ConcertRepository } from '@/artinfo/infrastructure/repository/concert.repository';
 import { ConcertsScheduler } from '@/artinfo/application/scheduler/concerts.scheduler';
 import { SystemRepository } from '@/artinfo/infrastructure/repository/system.repository';
+import { GunpoPrimeCrawlerService } from '@/artinfo/application/service/crawler/recruit/gunpo_prime_crawler.service';
 
 @Module({
   controllers: [CrawlerController, CrawlerEventHandler],
@@ -48,6 +49,7 @@ import { SystemRepository } from '@/artinfo/infrastructure/repository/system.rep
     NationalSymphonyCrawlerService,
     NationalOperaCrawlerService,
     ArtCenterCrawlerService,
+    GunpoPrimeCrawlerService,
     LogService,
 
     // Scheduler

@@ -14,6 +14,7 @@ import { ChongshinCrawlerService } from '@/artinfo/application/service/crawler/r
 import { NationalSymphonyCrawlerService } from '@/artinfo/application/service/crawler/recruit/national_symphony_crawler.service';
 import { NationalOperaCrawlerService } from '@/artinfo/application/service/crawler/recruit/national_opera_crawler.service';
 import { ArtCenterCrawlerService } from '@/artinfo/application/service/crawler/concert/art_center_crawler.service';
+import { GunpoPrimeCrawlerService } from '@/artinfo/application/service/crawler/recruit/gunpo_prime_crawler.service';
 
 @Injectable()
 export class CrawlerService {
@@ -33,6 +34,7 @@ export class CrawlerService {
     private readonly nationalSymphonyCrawlerService: NationalSymphonyCrawlerService,
     private readonly nationalOperaCrawlerService: NationalOperaCrawlerService,
     private readonly artCenterCrawlerService: ArtCenterCrawlerService,
+    private readonly gunpoPrimeCrawlerService: GunpoPrimeCrawlerService,
   ) {}
 
   async crawlRecruitJobs(): Promise<boolean> {
@@ -49,6 +51,7 @@ export class CrawlerService {
       await this.gwacheonCrawlerService.crawlGwacheon(),
       await this.nationalSymphonyCrawlerService.crawlNationalSymphony(),
       await this.nationalOperaCrawlerService.crawlNationalOpera(),
+      await this.gunpoPrimeCrawlerService.crawlGunpoPrime(),
 
       // RELIGION
       await this.jangshinCrawlerService.crawlJangshin(),
@@ -61,7 +64,6 @@ export class CrawlerService {
 
   async crawlConcerts(): Promise<boolean> {
     await Promise.any([
-      // ART_ORGANIZATION
       await this.artCenterCrawlerService.crawlArtCenter(), //
     ]);
     return true;
