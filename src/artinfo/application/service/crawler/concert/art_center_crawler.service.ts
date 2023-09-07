@@ -149,7 +149,7 @@ export class ArtCenterCrawlerService {
     if (title.includes('오케스트라') || title.includes('교향') || title.includes('필하모닉')) return CONCERT_CATEGORY.ORCHESTRA;
     if (title.includes('합창')) return CONCERT_CATEGORY.CHORUS;
     if (title.includes('앙상블') || title.includes('트리오')) return CONCERT_CATEGORY.ENSEMBLE;
-    if (title.includes('독주') || title.includes('리사이틀')) return CONCERT_CATEGORY.SOLO;
+    if (title.includes('독주') || title.includes('리사이틀') || title.includes('데뷔')) return CONCERT_CATEGORY.SOLO;
     return CONCERT_CATEGORY.ETC;
   }
 

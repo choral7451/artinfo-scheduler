@@ -8,6 +8,7 @@ export type ConcertPayload = {
   performanceTime: Date;
   profileId: string;
   category: CONCERT_CATEGORY;
+  uniqueKey?: string;
 };
 
 export class Concert {
@@ -21,6 +22,7 @@ export class Concert {
   created_at: Date;
   profile_id: string;
   category: CONCERT_CATEGORY;
+  unique_key?: string;
 
   static from(payload: ConcertPayload): Concert {
     const entity = new Concert();
@@ -32,6 +34,7 @@ export class Concert {
     entity.performance_time = payload.performanceTime;
     entity.profile_id = payload.profileId;
     entity.category = payload.category;
+    entity.unique_key = payload?.uniqueKey;
 
     return entity;
   }

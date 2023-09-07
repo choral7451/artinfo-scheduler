@@ -28,6 +28,7 @@ import { ConcertsScheduler } from '@/artinfo/application/scheduler/concerts.sche
 import { SystemRepository } from '@/artinfo/infrastructure/repository/system.repository';
 import { GunpoPrimeCrawlerService } from '@/artinfo/application/service/crawler/recruit/gunpo_prime_crawler.service';
 import { LotteConcertHallCrawlerService } from '@/artinfo/application/service/crawler/concert/lotte_concert_hall_crawler.service';
+import { SejongCrawlerService } from '@/artinfo/application/service/crawler/concert/sejong_crawler.service';
 
 @Module({
   controllers: [CrawlerController, CrawlerEventHandler],
@@ -52,6 +53,7 @@ import { LotteConcertHallCrawlerService } from '@/artinfo/application/service/cr
     ArtCenterCrawlerService,
     GunpoPrimeCrawlerService,
     LotteConcertHallCrawlerService,
+    SejongCrawlerService,
     LogService,
 
     // Scheduler

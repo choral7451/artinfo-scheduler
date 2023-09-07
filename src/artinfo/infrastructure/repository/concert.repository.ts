@@ -11,4 +11,11 @@ export class ConcertRepository extends SupabaseRepository {
 
     return data![0].id;
   }
+  async getConcert(uniqueKey: string): Promise<Concert | null> {
+    const { data, error } = await this.supabase.from('concerts').select('*').eq('unique_key', uniqueKey);
+
+    if (error) console.log(error);
+
+    return data![0];
+  }
 }

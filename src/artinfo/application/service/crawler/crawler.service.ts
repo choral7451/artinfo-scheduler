@@ -16,6 +16,7 @@ import { NationalOperaCrawlerService } from '@/artinfo/application/service/crawl
 import { ArtCenterCrawlerService } from '@/artinfo/application/service/crawler/concert/art_center_crawler.service';
 import { GunpoPrimeCrawlerService } from '@/artinfo/application/service/crawler/recruit/gunpo_prime_crawler.service';
 import { LotteConcertHallCrawlerService } from '@/artinfo/application/service/crawler/concert/lotte_concert_hall_crawler.service';
+import { SejongCrawlerService } from '@/artinfo/application/service/crawler/concert/sejong_crawler.service';
 
 @Injectable()
 export class CrawlerService {
@@ -37,6 +38,7 @@ export class CrawlerService {
     private readonly artCenterCrawlerService: ArtCenterCrawlerService,
     private readonly gunpoPrimeCrawlerService: GunpoPrimeCrawlerService,
     private readonly lotteConcertHallCrawlerService: LotteConcertHallCrawlerService,
+    private readonly sejongCrawlerService: SejongCrawlerService,
   ) {}
 
   async crawlRecruitJobs(): Promise<boolean> {
@@ -65,10 +67,9 @@ export class CrawlerService {
   }
 
   async crawlConcerts(): Promise<boolean> {
-    await Promise.allSettled([
-      await this.lotteConcertHallCrawlerService.crawlLotteConcertHall(), //
-      await this.artCenterCrawlerService.crawlArtCenter(), //
-    ]);
+    await this.sejongCrawlerService.crawlSejong();
+    await this.lotteConcertHallCrawlerService.crawlLotteConcertHall();
+    await this.artCenterCrawlerService.crawlArtCenter();
     return true;
   }
 }
