@@ -49,7 +49,10 @@ export class LotteConcertHallCrawlerService {
 
         if (flagDate === performanceDate) {
           const title = ulElement.find(`li:nth-child(${i}) > div > div.information > div > div > p > a`).text().trim();
-          let posterUrl = 'https://www.lotteconcerthall.com' + ulElement.find(`li:nth-child(${i}) > div > div.poster > a > img`).attr('src');
+          const posterSrc = ulElement.find(`li:nth-child(${i}) > div > div.poster > a > img`).attr('src');
+
+          if (!posterSrc) break;
+          let posterUrl = 'https://www.lotteconcerthall.com' + posterSrc;
 
           let filename = String(Date.now());
           filename = await this.urlToFile(posterUrl, filename);
@@ -84,8 +87,8 @@ export class LotteConcertHallCrawlerService {
             profileId: process.env.ARTINFO_ADMIN_ID!,
             category: this.classifyCategory(title),
           };
-
-          await this.concertRepository.saveConcert(Concert.from(concert));
+          console.log(concert);
+          // await this.concertRepository.saveConcert(Concert.from(concert));
         }
       }
     } catch (e) {
