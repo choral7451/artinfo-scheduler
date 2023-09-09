@@ -87,8 +87,8 @@ export class LotteConcertHallCrawlerService {
             profileId: process.env.ARTINFO_ADMIN_ID!,
             category: this.classifyCategory(title),
           };
-          console.log(concert);
-          // await this.concertRepository.saveConcert(Concert.from(concert));
+
+          await this.concertRepository.saveConcert(Concert.from(concert));
         }
       }
     } catch (e) {
