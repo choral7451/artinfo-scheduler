@@ -11,6 +11,7 @@ import { File } from '@web-std/file';
 import { UtilLog } from '@/artinfo/utils/log';
 import { LogPayload } from '@/artinfo/domain/entities/server_log.entity';
 import { Agent } from 'https';
+import * as md5 from 'md5';
 
 @Injectable()
 export class LotteConcertHallCrawlerService {
@@ -37,59 +38,66 @@ export class LotteConcertHallCrawlerService {
       const ulElement = $('ul#concerts-list-wrap');
       const liElements = ulElement.find('li');
 
-      const flagDate = ulElement.find(`li:nth-child(${liElements.length}) > div > div.information > dl > dd:nth-child(2)`).text().trim();
-
       for (let i = liElements.length - 1; i <= liElements.length; i++) {
         const performanceDate = ulElement.find(`li:nth-child(${i}) > div > div.information > dl > dd:nth-child(2)`).text().trim();
-        const performanceTime = ulElement.find(`li:nth-child(${i}) > div > div.information > dl > dd:nth-child(4)`).text().trim();
+        let performanceTime = ulElement.find(`li:nth-child(${i}) > div > div.information > dl > dd:nth-child(4)`).text().trim();
+
+        if (performanceTime.includes(',')) {
+          performanceTime = performanceTime.split(',')[1].trim();
+        }
+
         const performanceDateAndTime = new Date(performanceDate.split(' ')[0] + 'T' + performanceTime + ':00');
 
         const idx = ulElement.find(`li:nth-child(${i}) > div > div.information > div > div > p > a`).attr('data-url');
         const url = 'https://www.lotteconcerthall.com/kor/Performance/ConcertDetails/' + idx;
 
-        if (flagDate === performanceDate) {
-          const title = ulElement.find(`li:nth-child(${i}) > div > div.information > div > div > p > a`).text().trim();
-          const posterSrc = ulElement.find(`li:nth-child(${i}) > div > div.poster > a > img`).attr('src');
+        const title = ulElement.find(`li:nth-child(${i}) > div > div.information > div > div > p > a`).text().trim();
 
-          if (!posterSrc) break;
-          let posterUrl = 'https://www.lotteconcerthall.com' + posterSrc;
+        const uniqueKey = md5(title);
+        const fetchedConcert = await this.concertRepository.getConcert(uniqueKey);
+        if (fetchedConcert) break;
 
-          let filename = String(Date.now());
-          filename = await this.urlToFile(posterUrl, filename);
-          const buffer = fs.readFileSync('temp_images/' + filename);
-          const file = new File([buffer], filename, { type: 'image/webp' });
+        const posterSrc = ulElement.find(`li:nth-child(${i}) > div > div.poster > a > img`).attr('src');
 
-          posterUrl = await this.systemRepository.uploadImage('concert/' + filename, file);
-          fs.unlinkSync('temp_images/' + filename);
+        if (!posterSrc) break;
+        let posterUrl = 'https://www.lotteconcerthall.com' + posterSrc;
 
-          const detailHtml = await axios.get(url, {
-            headers: {
-              'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.100 Safari/537.36',
-            },
-            httpsAgent: new Agent({
-              rejectUnauthorized: false,
-            }),
-          });
+        let filename = String(Date.now());
+        filename = await this.urlToFile(posterUrl, filename);
+        const buffer = fs.readFileSync('temp_images/' + filename);
+        const file = new File([buffer], filename, { type: 'image/webp' });
 
-          const detail$ = cheerio.load(detailHtml.data);
-          const fetchedContents = detail$('#info-tab-details > div:nth-child(1) > div.guide_read.c_concert_readme').html();
-          let contents = `<img src='${posterUrl}' /><br/>`;
-          if (fetchedContents) {
-            contents += fetchedContents;
-          }
+        posterUrl = await this.systemRepository.uploadImage('concert/' + filename, file);
+        fs.unlinkSync('temp_images/' + filename);
 
-          const concert: ConcertPayload = {
-            title: title,
-            contents: contents!,
-            posterUrl: posterUrl,
-            location: '롯데콘서트홀',
-            performanceTime: performanceDateAndTime,
-            profileId: process.env.ARTINFO_ADMIN_ID!,
-            category: this.classifyCategory(title),
-          };
+        const detailHtml = await axios.get(url, {
+          headers: {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.100 Safari/537.36',
+          },
+          httpsAgent: new Agent({
+            rejectUnauthorized: false,
+          }),
+        });
 
-          await this.concertRepository.saveConcert(Concert.from(concert));
+        const detail$ = cheerio.load(detailHtml.data);
+        const fetchedContents = detail$('#info-tab-details > div:nth-child(1) > div.guide_read.c_concert_readme').html();
+        let contents = `<img src='${posterUrl}' /><br/>`;
+        if (fetchedContents) {
+          contents += fetchedContents;
         }
+
+        const concert: ConcertPayload = {
+          title: title,
+          contents: contents!,
+          posterUrl: posterUrl,
+          location: '롯데콘서트홀',
+          performanceTime: performanceDateAndTime,
+          profileId: process.env.ARTINFO_ADMIN_ID!,
+          category: this.classifyCategory(title),
+          uniqueKey: uniqueKey,
+        };
+
+        await this.concertRepository.saveConcert(Concert.from(concert));
       }
     } catch (e) {
       const logPayload: LogPayload = {

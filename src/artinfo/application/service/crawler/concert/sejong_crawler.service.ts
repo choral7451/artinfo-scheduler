@@ -93,7 +93,8 @@ export class SejongCrawlerService {
               .trim()
               .split(' ')[1];
 
-            const minute = performanceTime.split('시')[1].replace('분', ':00');
+            const minute = performanceTime.includes('0분') ? performanceTime.slice(performanceTime.indexOf('분') - 2, performanceTime.indexOf('분')) : '00:00';
+
             performanceTime =
               period.replaceAll('.', '-') + 'T' + String(Number(performanceTime.split('시')[0]) + 12) + ':' + (minute.length ? minute : '00:00');
 
