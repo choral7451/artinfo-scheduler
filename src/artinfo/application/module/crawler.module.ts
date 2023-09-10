@@ -31,6 +31,8 @@ import { LotteConcertHallCrawlerService } from '@/artinfo/application/service/cr
 import { SejongCrawlerService } from '@/artinfo/application/service/crawler/concert/sejong_crawler.service';
 import { GimcheonCrawlerService } from '@/artinfo/application/service/crawler/recruit/gimcheon_crawler.service';
 import { NonsanCrawlerService } from '@/artinfo/application/service/crawler/recruit/nonsan_crawler.service';
+import { DaejeonPhilCrawlerService } from '@/artinfo/application/service/crawler/recruit/daejeon_phil_crawler.service';
+import { DaejeonChorusCrawlerService } from '@/artinfo/application/service/crawler/recruit/daejeon_chorus_crawler.service';
 
 @Module({
   controllers: [CrawlerController, CrawlerEventHandler],
@@ -58,6 +60,8 @@ import { NonsanCrawlerService } from '@/artinfo/application/service/crawler/recr
     SejongCrawlerService,
     GimcheonCrawlerService,
     NonsanCrawlerService,
+    DaejeonPhilCrawlerService,
+    DaejeonChorusCrawlerService,
     LogService,
 
     // Scheduler

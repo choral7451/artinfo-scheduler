@@ -19,6 +19,8 @@ import { LotteConcertHallCrawlerService } from '@/artinfo/application/service/cr
 import { SejongCrawlerService } from '@/artinfo/application/service/crawler/concert/sejong_crawler.service';
 import { GimcheonCrawlerService } from '@/artinfo/application/service/crawler/recruit/gimcheon_crawler.service';
 import { NonsanCrawlerService } from '@/artinfo/application/service/crawler/recruit/nonsan_crawler.service';
+import { DaejeonPhilCrawlerService } from '@/artinfo/application/service/crawler/recruit/daejeon_phil_crawler.service';
+import { DaejeonChorusCrawlerService } from '@/artinfo/application/service/crawler/recruit/daejeon_chorus_crawler.service';
 
 @Injectable()
 export class CrawlerService {
@@ -43,6 +45,8 @@ export class CrawlerService {
     private readonly sejongCrawlerService: SejongCrawlerService,
     private readonly gimcheonCrawlerService: GimcheonCrawlerService,
     private readonly nonsanCrawlerService: NonsanCrawlerService,
+    private readonly daejeonPhilCrawlerService: DaejeonPhilCrawlerService,
+    private readonly daejeonChorusCrawlerService: DaejeonChorusCrawlerService,
   ) {}
 
   async crawlRecruitJobs(): Promise<boolean> {
@@ -62,7 +66,8 @@ export class CrawlerService {
       await this.gunpoPrimeCrawlerService.crawlGunpoPrime(),
       await this.gimcheonCrawlerService.crawlGimcheon(),
       await this.nonsanCrawlerService.crawlNonsan(),
-
+      await this.daejeonPhilCrawlerService.crawlDaejeonPhil(),
+      await this.daejeonChorusCrawlerService.crawlDaejeonChorus(),
       // RELIGION
       await this.jangshinCrawlerService.crawlJangshin(),
       // TODO 추가 작업 필요
