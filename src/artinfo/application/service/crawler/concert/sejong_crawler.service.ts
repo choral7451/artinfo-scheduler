@@ -164,7 +164,7 @@ export class SejongCrawlerService {
   }
 
   private categoryValidator(category: string): boolean {
-    const categories: string[] = ['기악', '국악', '성악', '합창'];
+    const categories: string[] = ['기악', '성악', '합창'];
     return categories.includes(category);
   }
 }
