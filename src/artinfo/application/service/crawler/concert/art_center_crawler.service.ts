@@ -56,57 +56,59 @@ export class ArtCenterCrawlerService {
             return 'https://www.sac.or.kr' + a?.getAttribute('src');
           }, tr);
 
-          let filename = String(Date.now());
-          filename = await this.urlToFile(posterUrl, filename);
-          const buffer = fs.readFileSync('temp_images/' + filename);
-          const file = new File([buffer], filename, { type: 'image/webp' });
+          if (posterUrl !== 'https://www.sac.or.kr/design/common/images/asset/noImage300x300.png') {
+            let filename = String(Date.now());
+            filename = await this.urlToFile(posterUrl, filename);
+            const buffer = fs.readFileSync('temp_images/' + filename);
+            const file = new File([buffer], filename, { type: 'image/webp' });
 
-          posterUrl = await this.systemRepository.uploadImage('concert/' + filename, file);
-          fs.unlinkSync('temp_images/' + filename);
+            posterUrl = await this.systemRepository.uploadImage('concert/' + filename, file);
+            fs.unlinkSync('temp_images/' + filename);
 
-          let performanceTime: any = await page.evaluate(tr => {
-            const td = tr.querySelector('td:nth-child(2)');
-            return td!.textContent!.trim();
-          }, tr);
+            let performanceTime: any = await page.evaluate(tr => {
+              const td = tr.querySelector('td:nth-child(2)');
+              return td!.textContent!.trim();
+            }, tr);
 
-          performanceTime = this.parseDateString(performanceTime);
+            performanceTime = this.parseDateString(performanceTime);
 
-          const detailHtml = await axios.get(linkHref, {
-            headers: {
-              'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.100 Safari/537.36',
-            },
-          });
+            const detailHtml = await axios.get(linkHref, {
+              headers: {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.100 Safari/537.36',
+              },
+            });
 
-          const detail$ = cheerio.load(detailHtml.data);
+            const detail$ = cheerio.load(detailHtml.data);
 
-          const nav = detail$('#contents > div.cwa-con > div.cwa-content.area > ul');
-          const countOfNav = nav.find('li').length;
-          let indexOfContents = 1;
+            const nav = detail$('#contents > div.cwa-con > div.cwa-content.area > ul');
+            const countOfNav = nav.find('li').length;
+            let indexOfContents = 1;
 
-          for (let j = 1; j < countOfNav; j++) {
-            if (nav.find(`li:nth-child(${j})`).text().trim() === '작품소개') {
-              indexOfContents = j;
-              break;
+            for (let j = 1; j < countOfNav; j++) {
+              if (nav.find(`li:nth-child(${j})`).text().trim() === '작품소개') {
+                indexOfContents = j;
+                break;
+              }
             }
+
+            const contents =
+              `<img src=${posterUrl}>` +
+              detail$('#contents > div.cwa-con > div.cwa-content.area > div.cwa-tab-list')
+                .find(`div:nth-child(${indexOfContents === 1 ? indexOfContents : indexOfContents + 1}) > div`)
+                .html();
+
+            const concert: ConcertPayload = {
+              title: title,
+              contents: contents!,
+              posterUrl: posterUrl,
+              location: '예술의전당 ' + location,
+              performanceTime: performanceTime!,
+              profileId: process.env.ARTINFO_ADMIN_ID!,
+              category: this.classifyCategory(title),
+            };
+
+            await this.concertRepository.saveConcert(Concert.from(concert));
           }
-
-          const contents =
-            `<img src=${posterUrl}>` +
-            detail$('#contents > div.cwa-con > div.cwa-content.area > div.cwa-tab-list')
-              .find(`div:nth-child(${indexOfContents === 1 ? indexOfContents : indexOfContents + 1}) > div`)
-              .html();
-
-          const concert: ConcertPayload = {
-            title: title,
-            contents: contents!,
-            posterUrl: posterUrl,
-            location: '예술의전당 ' + location,
-            performanceTime: performanceTime!,
-            profileId: process.env.ARTINFO_ADMIN_ID!,
-            category: this.classifyCategory(title),
-          };
-
-          await this.concertRepository.saveConcert(Concert.from(concert));
         }
       }
 
@@ -147,9 +149,9 @@ export class ArtCenterCrawlerService {
 
   private classifyCategory(title: string) {
     if (title.includes('오케스트라') || title.includes('교향') || title.includes('필하모닉')) return CONCERT_CATEGORY.ORCHESTRA;
-    if (title.includes('합창')) return CONCERT_CATEGORY.CHORUS;
+    if (title.includes('합창') || title.includes('콰이어')) return CONCERT_CATEGORY.CHORUS;
     if (title.includes('앙상블') || title.includes('트리오')) return CONCERT_CATEGORY.ENSEMBLE;
-    if (title.includes('독주') || title.includes('리사이틀') || title.includes('데뷔')) return CONCERT_CATEGORY.SOLO;
+    if (title.includes('독주') || title.includes('리사이틀') || title.includes('데뷔') || title.includes('독창')) return CONCERT_CATEGORY.SOLO;
     return CONCERT_CATEGORY.ETC;
   }
 
