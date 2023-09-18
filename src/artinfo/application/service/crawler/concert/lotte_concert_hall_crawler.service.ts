@@ -46,6 +46,10 @@ export class LotteConcertHallCrawlerService {
           performanceTime = performanceTime.split(',')[1].trim();
         }
 
+        if (performanceTime.includes('ㅣ')) {
+          performanceTime = performanceTime.split('ㅣ')[0].split(' ')[1].trim();
+        }
+
         const performanceDateAndTime = new Date(performanceDate.split(' ')[0] + 'T' + performanceTime + ':00');
 
         const idx = ulElement.find(`li:nth-child(${i}) > div > div.information > div > div > p > a`).attr('data-url');
