@@ -45,7 +45,7 @@ export class LotteConcertHallCrawlerService {
         if (performanceTime.includes(',')) {
           performanceTime = performanceTime.split(',')[1].trim();
         }
-
+        //TODO 개선 필요
         if (performanceTime.includes('ㅣ')) {
           performanceTime = performanceTime.split('ㅣ')[0].split(' ')[1].trim();
         }
@@ -59,49 +59,49 @@ export class LotteConcertHallCrawlerService {
 
         const uniqueKey = md5(title);
         const fetchedConcert = await this.concertRepository.getConcert(uniqueKey);
-        if (fetchedConcert) break;
+        if (!fetchedConcert) {
+          const posterSrc = ulElement.find(`li:nth-child(${i}) > div > div.poster > a > img`).attr('src');
 
-        const posterSrc = ulElement.find(`li:nth-child(${i}) > div > div.poster > a > img`).attr('src');
+          if (!posterSrc) break;
+          let posterUrl = 'https://www.lotteconcerthall.com' + posterSrc;
 
-        if (!posterSrc) break;
-        let posterUrl = 'https://www.lotteconcerthall.com' + posterSrc;
+          let filename = String(Date.now());
+          filename = await this.urlToFile(posterUrl, filename);
+          const buffer = fs.readFileSync('temp_images/' + filename);
+          const file = new File([buffer], filename, { type: 'image/webp' });
 
-        let filename = String(Date.now());
-        filename = await this.urlToFile(posterUrl, filename);
-        const buffer = fs.readFileSync('temp_images/' + filename);
-        const file = new File([buffer], filename, { type: 'image/webp' });
+          posterUrl = await this.systemRepository.uploadImage('concert/' + filename, file);
+          fs.unlinkSync('temp_images/' + filename);
 
-        posterUrl = await this.systemRepository.uploadImage('concert/' + filename, file);
-        fs.unlinkSync('temp_images/' + filename);
+          const detailHtml = await axios.get(url, {
+            headers: {
+              'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.100 Safari/537.36',
+            },
+            httpsAgent: new Agent({
+              rejectUnauthorized: false,
+            }),
+          });
 
-        const detailHtml = await axios.get(url, {
-          headers: {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.100 Safari/537.36',
-          },
-          httpsAgent: new Agent({
-            rejectUnauthorized: false,
-          }),
-        });
+          const detail$ = cheerio.load(detailHtml.data);
+          const fetchedContents = detail$('#info-tab-details > div:nth-child(1) > div.guide_read.c_concert_readme').html();
+          let contents = `<img src="${posterUrl}" /><br/>`;
+          if (fetchedContents) {
+            contents += fetchedContents;
+          }
 
-        const detail$ = cheerio.load(detailHtml.data);
-        const fetchedContents = detail$('#info-tab-details > div:nth-child(1) > div.guide_read.c_concert_readme').html();
-        let contents = `<img src='${posterUrl}' /><br/>`;
-        if (fetchedContents) {
-          contents += fetchedContents;
+          const concert: ConcertPayload = {
+            title: title,
+            contents: contents!,
+            posterUrl: posterUrl,
+            location: '롯데콘서트홀',
+            performanceTime: performanceDateAndTime,
+            profileId: process.env.ARTINFO_ADMIN_ID!,
+            category: this.classifyCategory(title),
+            uniqueKey: uniqueKey,
+          };
+
+          await this.concertRepository.saveConcert(Concert.from(concert));
         }
-
-        const concert: ConcertPayload = {
-          title: title,
-          contents: contents!,
-          posterUrl: posterUrl,
-          location: '롯데콘서트홀',
-          performanceTime: performanceDateAndTime,
-          profileId: process.env.ARTINFO_ADMIN_ID!,
-          category: this.classifyCategory(title),
-          uniqueKey: uniqueKey,
-        };
-
-        await this.concertRepository.saveConcert(Concert.from(concert));
       }
     } catch (e) {
       const logPayload: LogPayload = {
