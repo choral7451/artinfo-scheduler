@@ -70,7 +70,7 @@ export class ArtCenterCrawlerService {
               return td!.textContent!.trim();
             }, tr);
 
-            performanceTime = this.parseDateString(performanceTime);
+            performanceTime = this.parseDateString(performanceTime, title.length);
 
             const detailHtml = await axios.get(linkHref, {
               headers: {
@@ -155,8 +155,9 @@ export class ArtCenterCrawlerService {
     return CONCERT_CATEGORY.ETC;
   }
 
-  private parseDateString(dateString: string) {
-    return new Date(`${dateString.replaceAll('.', '-').split('(')[0]}T${dateString.split(' ')[1]}:00`);
+  private parseDateString(dateString: string, titleLength: number) {
+    const date = dateString.slice(titleLength, titleLength + 19).replaceAll('.', '-');
+    return new Date(`${date.split('(')[0]}T${date.split(' ')[1]}:00`);
   }
 
   private locationValidator(location: string) {
