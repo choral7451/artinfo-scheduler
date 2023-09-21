@@ -70,7 +70,7 @@ export class ArtCenterCrawlerService {
               return td!.textContent!.trim();
             }, tr);
 
-            performanceTime = this.parseDateString(performanceTime, title.length);
+            performanceTime = this.parseDateString(performanceTime);
 
             const detailHtml = await axios.get(linkHref, {
               headers: {
@@ -155,8 +155,8 @@ export class ArtCenterCrawlerService {
     return CONCERT_CATEGORY.ETC;
   }
 
-  private parseDateString(dateString: string, titleLength: number) {
-    const date = dateString.slice(titleLength, titleLength + 19).replaceAll('.', '-');
+  private parseDateString(dateString: string) {
+    const date = '2023-' + dateString.split('2023.')[1].slice(0, 14).replaceAll('.', '-');
     return new Date(`${date.split('(')[0]}T${date.split(' ')[1]}:00`);
   }
 
