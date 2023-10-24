@@ -33,6 +33,9 @@ import { GimcheonCrawlerService } from '@/artinfo/application/service/crawler/re
 import { NonsanCrawlerService } from '@/artinfo/application/service/crawler/recruit/nonsan_crawler.service';
 import { DaejeonPhilCrawlerService } from '@/artinfo/application/service/crawler/recruit/daejeon_phil_crawler.service';
 import { DaejeonChorusCrawlerService } from '@/artinfo/application/service/crawler/recruit/daejeon_chorus_crawler.service';
+import {
+  ArtCenterIncheonService
+} from "@/artinfo/application/service/crawler/concert/art_center_incheon_crawler.service";
 
 @Module({
   controllers: [CrawlerController, CrawlerEventHandler],
@@ -62,6 +65,7 @@ import { DaejeonChorusCrawlerService } from '@/artinfo/application/service/crawl
     NonsanCrawlerService,
     DaejeonPhilCrawlerService,
     DaejeonChorusCrawlerService,
+    ArtCenterIncheonService,
     LogService,
 
     // Scheduler

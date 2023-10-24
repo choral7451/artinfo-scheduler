@@ -21,6 +21,9 @@ import { GimcheonCrawlerService } from '@/artinfo/application/service/crawler/re
 import { NonsanCrawlerService } from '@/artinfo/application/service/crawler/recruit/nonsan_crawler.service';
 import { DaejeonPhilCrawlerService } from '@/artinfo/application/service/crawler/recruit/daejeon_phil_crawler.service';
 import { DaejeonChorusCrawlerService } from '@/artinfo/application/service/crawler/recruit/daejeon_chorus_crawler.service';
+import {
+  ArtCenterIncheonService
+} from "@/artinfo/application/service/crawler/concert/art_center_incheon_crawler.service";
 
 @Injectable()
 export class CrawlerService {
@@ -47,6 +50,7 @@ export class CrawlerService {
     private readonly nonsanCrawlerService: NonsanCrawlerService,
     private readonly daejeonPhilCrawlerService: DaejeonPhilCrawlerService,
     private readonly daejeonChorusCrawlerService: DaejeonChorusCrawlerService,
+    private readonly artiCenterIncheonService: ArtCenterIncheonService,
   ) {}
 
   async crawlRecruitJobs(): Promise<boolean> {
@@ -78,6 +82,7 @@ export class CrawlerService {
   }
 
   async crawlConcerts(): Promise<boolean> {
+    await this.artiCenterIncheonService.crawlArtCenterIncheon()
     await this.sejongCrawlerService.crawlSejong();
     await this.lotteConcertHallCrawlerService.crawlLotteConcertHall();
     await this.artCenterCrawlerService.crawlArtCenter();
